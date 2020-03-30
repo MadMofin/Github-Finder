@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import Navbar from "./components/layout/Navbar"
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import About from './components/pages/About';
+import Alert from './components/layout/Alert';
+import User from './components/users/User';
 
-function App() {
+
+import Home from './components/pages/Home';
+
+import GithubState from './context/github/githubState';
+import AlertState from './context/alert/alertState';
+class App extends Component{
+
+  state = {
+    user: {},
+    loading: false
+  };
+
+  //Cuando el componente ya cargó
+  /*async componentDidMount(){
+    this.setState({ loading: true });
+    const res = await Axios.get("https://api.github.com/users");
+    this.setState({users: res.data, loading: false})
+    console.log(res.data);
+  }*/
+
+
+render(){
+
+  const {loading, users } = this.state;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <GithubState>
+      <AlertState>
+        <Router>
+          
+          <div className="App">
+            <Navbar title='GitHub Finder' icon='fab fa-github'/>
+            <div className="container">
+            <Alert/>
+
+            <Switch> 
+
+              <Route exact path="/" component={Home}/>
+              <Route exact path="/about" component={About}/>
+              <Route exact path="/user/:login" component={User}/>
+
+            </ Switch>
+            
+            </div>
+          </div>
+        
+        </Router>
+      </AlertState>
+    </GithubState>
   );
+}
 }
 
 export default App;
